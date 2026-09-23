@@ -98,6 +98,6 @@ This project is intended as a decision-support tool, not a definitive fact-check
 - Deploy to Streamlit Cloud or Hugging Face Spaces
 - Add model evaluation metrics and charts
 
-## Resume description
+## Short description
 
 Built a Python Streamlit news-credibility screening dashboard that ingests live Google News RSS metadata, persists deduplicated articles in SQLite, and applies a fine-tuned DistilBERT classifier with transparent model limitations and related-coverage signals.
