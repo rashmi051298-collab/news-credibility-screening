@@ -1,48 +1,102 @@
 # News Credibility Screening Dashboard
 
-A Streamlit portfolio project that ingests Google News RSS results, stores them in SQLite, and screens an article with a trained DistilBERT classifier.
+A real-world NLP and ML project that screens article headlines and summaries for credibility using a fine-tuned DistilBERT model.
 
-## Why this is not called a “fake news detector”
+## Overview
 
-Text classification cannot establish truth. The application provides a screening signal and visible source context, while clearly stating its limitations.
+This project builds a decision-support dashboard for evaluating whether a news article appears more likely to be factual or misleading. It combines:
+- live Google News RSS retrieval
+- local SQLite storage for saved articles
+- NLP preprocessing
+- transformer-based classification
+- a Streamlit dashboard for user interaction
+
+## Problem
+
+Misinformation spreads quickly across digital media. A simple way to support readers is to provide a lightweight credibility screening tool that can assess article text and flag suspicious content.
+
+## Tech Stack
+
+- Python
+- Streamlit
+- DistilBERT
+- Transformers
+- PyTorch
+- Pandas
+- SQLite
+- Google News RSS
+- Scikit-learn
+
+## Project Structure
+
+- `app.py` — Streamlit dashboard
+- `train_model.py` — model training pipeline
+- `prepare_welfake.py` — dataset preparation
+- `services/database.py` — SQLite operations
+- `services/news_feed.py` — Google News RSS feed logic
+- `services/predictor.py` — model inference logic
+- `data/` — prepared dataset and raw source data
+- `models/fake_news_distilbert/` — trained model checkpoint
+
+## Features
+
+- Fetches current Google News articles
+- Saves article metadata into a local database
+- Screens article titles and summaries using a trained transformer
+- Displays confidence scores
+- Provides a local news library for review
+- Supports dataset preparation from WELFake
+
+## Dataset
+
+The project uses the WELFake dataset for fake vs factual classification. The dataset is prepared into a structured CSV format before training.
+
+## Model
+
+The model is based on DistilBERT and fine-tuned for binary classification:
+- 0 = factual / lower-risk
+- 1 = fake / misleading
 
 ## Setup
 
-1. Install Python 3.10 or later from [python.org](https://www.python.org/downloads/).
-2. Open a terminal in this folder and run:
+1. Clone the repository
+2. Create a virtual environment
+3. Install dependencies
+4. Prepare the dataset
+5. Train the model
+6. Run the app
 
-   ```powershell
-   py -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-   py -m pip install -r requirements.txt
-   ```
+Example:
 
-3. Download the [WELFake dataset](https://zenodo.org/records/4561253) and extract `WELFake_Dataset.csv`. It provides a large labeled dataset, but its labels are `0=fake` and `1=real`, so first prepare it for this project:
+```bash
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python prepare_welfake.py data\raw\WELFake_Dataset.csv
+python train_model.py data\welfake_prepared.csv --epochs 1 --batch-size 2 --max-length 64 --max-samples 2000
+python -m streamlit run app.py
+```
 
-   ```powershell
-   py prepare_welfake.py path\to\WELFake_Dataset.csv
-   ```
+## Usage
 
-4. Train the model. The prepared dataset uses `0=factual/lower-risk` and `1=fake/misleading`:
+- Open the Streamlit app
+- Search for a topic in the “Get news” tab
+- Save relevant news articles
+- Open the “Screen article” tab
+- Enter a headline and article text
+- View the credibility result and confidence score
 
-   ```powershell
-   py train_model.py data\welfake_prepared.csv --epochs 1
-   ```
+## Notes
 
-5. Start the app:
+This project is intended as a decision-support tool, not a definitive fact-checking system. It should be used alongside source verification and professional journalism practices.
 
-   ```powershell
-   py -m streamlit run app.py
-   ```
+## Future Improvements
 
-## Included components
-
-- `app.py`: Streamlit interface.
-- `services/news_feed.py`: Google News RSS query and retrieval.
-- `services/database.py`: SQLite storage; no manually written SQL is needed by the user.
-- `train_model.py`: clean training and saving flow.
-- `services/predictor.py`: model inference only. It never accidentally replaces a trained model.
-- `prepare_welfake.py`: converts WELFake's label convention to the project's convention.
+- Add explainability with SHAP or LIME
+- Improve dataset balancing
+- Add multi-label classification or rumor detection
+- Deploy to Streamlit Cloud or Hugging Face Spaces
+- Add model evaluation metrics and charts
 
 ## Resume description
 
