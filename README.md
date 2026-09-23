@@ -44,6 +44,6 @@ Text classification cannot establish truth. The application provides a screening
 - `services/predictor.py`: model inference only. It never accidentally replaces a trained model.
 - `prepare_welfake.py`: converts WELFake's label convention to the project's convention.
 
-## Resume description
+## Short description
 
 Built a Python Streamlit news-credibility screening dashboard that ingests live Google News RSS metadata, persists deduplicated articles in SQLite, and applies a fine-tuned DistilBERT classifier with transparent model limitations and related-coverage signals.
