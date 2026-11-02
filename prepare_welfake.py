@@ -1,7 +1,7 @@
-"""Convert the WELFake CSV labels to this project's consistent screening labels.
+"""Convert WELFake source labels for the optional legacy classifier training pipeline.
 
-WELFake uses 0=fake and 1=real. This project uses 0=factual/lower-risk and
-1=fake or potentially misleading, so the label must be inverted deliberately.
+WELFake uses 0=fake and 1=real. These remain dataset-provided labels, not live
+fact-check results or independent verification of every article.
 """
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ def main(input_path: str, output_path: str) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     clean.to_csv(destination, index=False)
     print(f"Prepared {len(clean):,} records at {destination}")
-    print("Project labels: 0=factual/lower-risk, 1=fake or potentially misleading")
+    print("Training labels: 0=dataset-labeled real, 1=dataset-labeled fake")
 
 
 if __name__ == "__main__":

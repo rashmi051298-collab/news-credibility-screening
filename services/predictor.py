@@ -9,7 +9,10 @@ from transformers import DistilBertForSequenceClassification, DistilBertTokenize
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 MODEL_DIR = BASE_DIR / "models" / "fake_news_distilbert"
-LABELS = {0: "Factual / lower-risk", 1: "Potentially misleading / higher-risk"}
+LABELS = {
+    0: "Not flagged as fake/misleading (unverified)",
+    1: "Potentially fake or misleading",
+}
 
 
 @lru_cache(maxsize=1)
@@ -28,5 +31,6 @@ def screen_article(title: str, text: str) -> tuple[str, float]:
     input_text = f"{title} [SEP] {text}".strip()
     inputs = tokenizer(input_text, return_tensors="pt", truncation=True, max_length=256)
     probabilities = torch.softmax(model(**inputs).logits, dim=1)[0]
+    # Class 0 is the dataset's real class; the prediction does not verify this article.
     label_id = int(torch.argmax(probabilities).item())
     return LABELS[label_id], float(probabilities[label_id].item() * 100)

@@ -51,7 +51,7 @@ def load_dataset(path: str) -> tuple[list[str], list[int]]:
     dataframe = dataframe.dropna(subset=["label"])
     labels = dataframe["label"].astype(int).tolist()
     if not set(labels).issubset({0, 1}) or len(set(labels)) != 2:
-        raise ValueError("label must contain both classes: 0=factual and 1=fake/misleading.")
+        raise ValueError("label must contain both classes: 0=dataset-labeled real and 1=dataset-labeled fake.")
     content = (dataframe["title"].fillna("") + " [SEP] " + dataframe["text"].fillna("")).tolist()
     return content, labels
 
@@ -99,7 +99,7 @@ def main(dataset_path: str, epochs: int, batch_size: int = 4, max_length: int = 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("dataset", help="CSV with title,text,label columns; 0=factual, 1=fake/misleading")
+    parser.add_argument("dataset", help="CSV with title,text,label columns; 0=dataset-labeled real, 1=dataset-labeled fake")
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=4, help="Smaller values reduce memory pressure on low-memory machines.")
     parser.add_argument("--max-length", type=int, default=128, help="Shorter sequence length lowers peak memory use.")
